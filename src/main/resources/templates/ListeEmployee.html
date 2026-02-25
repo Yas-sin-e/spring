@@ -1,0 +1,40 @@
+ <!DOCTYPE html> 
+<html xmlns:th="http://www.thymeleaf.org"> 
+<link rel="stylesheet" type="text/css" 
+href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" /> 
+<head> 
+<meta charset="utf-8"> 
+<title>Liste des Employees</title> 
+</head> 
+<body> 
+<div class="container mt-5"> 
+<div class="card"> 
+  <div class="card-header"> 
+    Liste des Employees 
+  </div> 
+  <div class="card-body"> 
+        
+      <table class="table table-striped"> 
+        <tr> 
+          <th>ID</th><th>Nom Employees</th><th>Salaire</th> 
+         </tr>   
+           <tr th:each="e:${employees.content}"> 
+              <td th:text="${e.idEmp}"></td> 
+              <td th:text="${e.nomEmp}"></td> 
+              <td th:text="${e.salaire}"></td>
+			  <td><a class="btn btn-danger" th:href="@{supprimerEmployee(id=${p.idEmp}, 
+			  page=${currentPage},size=${size})}">Supprimer</a></td>      
+           </tr>              
+      </table> 
+	  <ul class="nav nav-pills"> 
+	  <li th:each="page,status:${pages}"> 
+	  <a th:class="${status.index==currentPage?'btn btn-primary':'btn'  }"  
+	  th:href="@{ ListeEmployee(page=${status.index}, size=${size} ) }" 
+	  th:text="${status.index }"></a> 
+	  </li> 
+	  </ul> 
+  </div> 
+</div> 
+</div> 
+</body> 
+</html> 
