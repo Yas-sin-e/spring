@@ -30,11 +30,11 @@ public class EmployeeController {
 	// 1. Lister les employés
 	@RequestMapping("/ListeEmployee")
 	public String listeEmployees(ModelMap modelMap, @RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "3") int size) {
-		Page<Employee> lemp = emps.getAllEmployeesParPage(page, size);
+			@RequestParam(name = "size", defaultValue = "4") int size) {
+		Page<Employee> lempPage = emps.getAllEmployeesParPage(page, size);
 
-		modelMap.addAttribute("employees", lemp);
-		modelMap.addAttribute("pages", new int[lemp.getTotalPages()]);
+		modelMap.addAttribute("employees", lempPage);
+		modelMap.addAttribute("pages", new int[lempPage.getTotalPages()]);
 		modelMap.addAttribute("currentPage", page);
 		modelMap.addAttribute("size", size);
 		return "ListeEmployee";
@@ -66,10 +66,15 @@ public class EmployeeController {
 	@RequestMapping("/supprimerEmployee")
 	public String supprimerEmployee(@RequestParam("id") Long id, ModelMap modelMap,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "2") int size) {
+			@RequestParam(name = "size", defaultValue = "4") int size) {
+
 		emps.deleteEmployeeById(id);
-		List<Employee> lemp = emps.getAllEmployees();
+		Page<Employee> lemp = emps.getAllEmployeesParPage(page, size);
+		// 3. On remet tout dans le modelMap pour que le HTML puisse l'afficher
 		modelMap.addAttribute("employees", lemp);
+		modelMap.addAttribute("pages", new int[lemp.getTotalPages()]);
+		modelMap.addAttribute("currentPage", page);
+		modelMap.addAttribute("size", size);
 		return "ListeEmployee";
 	}
 
