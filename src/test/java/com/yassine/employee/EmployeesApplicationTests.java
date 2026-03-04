@@ -36,7 +36,26 @@ class EmployeesApplicationTests {
 		// bloquer
 
 	}
+	@Test
+	public void testFindByNomEmployee()
+	{
+		List<Employee>  emps = emp.findEmployeeByNomEmp("yassine");
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
 
+	}
+	@Test
+	public void testFindByNomEmployee_Contains()
+	{
+		List<Employee>  emps = emp.findByNomEmpContains("yas");
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
 	@Test
 	public void modificationEmp() {
 		Employee em = emp.findById(11L).get();
@@ -77,4 +96,27 @@ class EmployeesApplicationTests {
 			System.out.println(e.toString());
 		});
 	}
+}
+@Test
+public void testFindByNomEmp() {
+	List<Employee> emps = emp("yassine");
+	emps.forEach(System.out::println);
+}
+
+@Test
+public void testFindByNomSalaire() {
+	List<Employee> emps = employeeRepository.findByNomSalaire("y", 15000.0);
+	emps.forEach(System.out::println);
+}
+
+@Test
+public void testFindByGradeIdGrad() {
+	List<Employee> emps = employeeRepository.findByGradeIdGrad(1L);
+	emps.forEach(System.out::println);
+}
+
+@Test
+public void testTrier() {
+	List<Employee> emps = employeeRepository.trierEmployeesNomsSalaire();
+	emps.forEach(System.out::println);
 }

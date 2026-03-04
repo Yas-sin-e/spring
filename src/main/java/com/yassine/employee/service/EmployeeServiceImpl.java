@@ -2,6 +2,7 @@ package com.yassine.employee.service;
 
 import java.util.List;
 
+import com.yassine.employee.entities.Grade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,5 +54,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Page<Employee> getAllEmployeesParPage(int page, int size) {
 		return emp.findAll(PageRequest.of(page, size));
 	}
+
+	@Override public List<Employee> findByNomEmp(String nom) { return emp.findEmployeeByNomEmp(nom); }
+	@Override public List<Employee> findByNomEmpContains(String nom) { return emp.findByNomEmpContains(nom); }
+	@Override public List<Employee> findByNomSalaire(String nom, Double salaire) { return emp.findByNomSalaire(nom, salaire); }
+	@Override public List<Employee> findByGrade(Grade grade) { return emp.findByGrade(grade); }
+	@Override public List<Employee> findByGradeIdGrad(Long id) { return emp.findByGradeIdGrad(id); }
+	@Override public List<Employee> findByOrderByNomEmpAsc() { return emp.findByOrderByNomEmpAsc(); }
+	@Override public List<Employee> trierEmployeesNomsSalaire() { return emp.trierEmployeesNomsSalaire(); }
 
 }
