@@ -3,6 +3,7 @@ package com.yassine.employee;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.yassine.employee.entities.Grade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +40,27 @@ class EmployeesApplicationTests {
 	@Test
 	public void testFindByNomEmployee()
 	{
-		List<Employee>  emps = emp.findEmployeeByNomEmp("yassine");
+		List<Employee>  emps = emp.findByNomEmp("yassine");
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
+	@Test
+	public void testFindByNomEmployeAsc()
+	{
+		List<Employee>  emps = emp.findByOrderByNomEmpAsc();
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
+	@Test
+	public void trierEmployeeBYSalaire()
+	{
+		List<Employee>  emps = emp.trierEmployeesNomsSalaire();
 		for (Employee e : emps)
 		{
 			System.out.println(e);
@@ -56,6 +77,42 @@ class EmployeesApplicationTests {
 		}
 
 	}
+	@Test
+	public void testFindBySalaire()
+	{
+		List<Employee>  emps = emp.findByNomSalaire("Rayen",2500.0);
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
+	@Test
+	public void testFindByGradeidGrad()
+	{
+		List<Employee>  emps = emp.findByGradeIdGrad(1L);
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
+	@Test
+	public void testfindByGrade()
+	{
+		Grade gra=new Grade();
+		gra.setIdGrad(1l);
+		List<Employee>  emps = emp.findByGrade(gra);
+		for (Employee e : emps)
+		{
+			System.out.println(e);
+		}
+
+	}
+
+
+
+
 	@Test
 	public void modificationEmp() {
 		Employee em = emp.findById(11L).get();
@@ -97,26 +154,5 @@ class EmployeesApplicationTests {
 		});
 	}
 }
-@Test
-public void testFindByNomEmp() {
-	List<Employee> emps = emp("yassine");
-	emps.forEach(System.out::println);
-}
 
-@Test
-public void testFindByNomSalaire() {
-	List<Employee> emps = employeeRepository.findByNomSalaire("y", 15000.0);
-	emps.forEach(System.out::println);
-}
 
-@Test
-public void testFindByGradeIdGrad() {
-	List<Employee> emps = employeeRepository.findByGradeIdGrad(1L);
-	emps.forEach(System.out::println);
-}
-
-@Test
-public void testTrier() {
-	List<Employee> emps = employeeRepository.trierEmployeesNomsSalaire();
-	emps.forEach(System.out::println);
-}

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -15,12 +14,21 @@ import java.util.List;
 public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idgrad;
+    private Long idGrad; // Corrigé : idGrad au lieu de idgrad
     private String nomGrade;
-    private String descriptionGra;
-    @JsonIgnore // Pour éviter les boucles infinies lors de l'affichage JSON
-    @OneToMany(mappedBy = "grade")//ici on peut enlever mais il ecirt un nouveau table
-    private List<Employee> produits;
+    private String descriptionGrade;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "grade")
+    private List<Employee> employees; // Plus clair que "produits"
 
+    @Override
+    public String toString() {
+        return "Grade{" +
+                "idGrad=" + idGrad +
+                ", nomGrade='" + nomGrade + '\'' +
+                ", descriptionGrade='" + descriptionGrade + '\'' +
+
+                '}';
+    }
 }

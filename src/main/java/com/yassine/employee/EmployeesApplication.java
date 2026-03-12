@@ -21,7 +21,7 @@ public class EmployeesApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		emp.saveEmployee(new Employee("toto", LocalDate.of(2024, 9, 10), 4000.0));
+		emp.saveEmployee(new Employee("tatii", LocalDate.of(2024, 9, 10), 4000.0));
 
 
 	}

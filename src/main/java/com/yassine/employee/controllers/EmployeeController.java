@@ -3,10 +3,13 @@ package com.yassine.employee.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.yassine.employee.entities.Grade;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,24 +45,37 @@ public class EmployeeController {
 
 	// 2. Afficher le formulaire de création
 	@RequestMapping("/showCreate")
-	public String showCreate() {
-		return "createEmployee";
+	public String showCreate(ModelMap modelMap) {
+		List<Grade> grades = emps.getAllGrades();
+		modelMap.addAttribute("employee", new Employee());
+		modelMap.addAttribute("mode", "new");
+		modelMap.addAttribute("grades", grades);
+		return "formEmployee";
 	}
 
 	// 3. Sauvegarder un employé
 	@RequestMapping("/saveEmployee")
-	public String saveEmployee(@ModelAttribute("employee") Employee employee, @RequestParam("date") String date,
-			ModelMap modelMap) {
-		// Plus besoin de SimpleDateFormat ou de bloc try/catch ParseException !
-		// On convertit directement le String (format yyyy-MM-dd) en LocalDate
-		LocalDate dateNaiss = LocalDate.parse(date);
-		employee.setDateNaiss(dateNaiss);
+	public String saveEmployee(@Valid Employee employee, BindingResult bindingResult,
+							   @RequestParam(name="page", defaultValue="0") int page,
+							   @RequestParam(name="size", defaultValue="4") int size) {
 
-		Employee saveEmp = emps.saveEmployee(employee);
+		int currentPage;
+		boolean isNew = false;
 
-		String msg = "Employé enregistré avec Id " + saveEmp.getIdEmp();
-		modelMap.addAttribute("msg", msg);
-		return "createEmployee";
+		if (bindingResult.hasErrors()) return "formEmployee";
+
+		if (employee.getIdEmp() == null) isNew = true; // ajout
+
+		emps.saveEmployee(employee);
+
+		if (isNew) {
+			Page<Employee> empPage = emps.getAllEmployeesParPage(page, size);
+			currentPage = empPage.getTotalPages() - 1; // aller à la dernière page
+		} else {
+			currentPage = page; // rester sur la page courante pour la modification
+		}
+
+		return "redirect:/ListeEmployee?page=" + currentPage + "&size=" + size;
 	}
 
 	// 4. Supprimer un employé
@@ -73,17 +89,23 @@ public class EmployeeController {
 		// 3. On remet tout dans le modelMap pour que le HTML puisse l'afficher
 		modelMap.addAttribute("employees", lemp);
 		modelMap.addAttribute("pages", new int[lemp.getTotalPages()]);
-		modelMap.addAttribute("currentPage", page);
+		modelMap.addAttribute("page", page);
 		modelMap.addAttribute("size", size);
 		return "ListeEmployee";
 	}
 
 	// 5. Charger les données d'un employé pour modification
 	@RequestMapping("/modifierEmployee")
-	public String editerEmployee(@RequestParam("id") Long id, ModelMap modelMap) {
+	public String editerEmployee(@RequestParam("id") Long id, ModelMap modelMap,@RequestParam(name = "page", defaultValue = "0") int page,
+								 @RequestParam(name = "size", defaultValue = "4") int size){
 		Employee e = emps.getEmployee(id);
+		List<Grade> grades = emps.getAllGrades();
 		modelMap.addAttribute("employee", e);
-		return "editerEmployee";
+		modelMap.addAttribute("mode", "edit");
+		modelMap.addAttribute("grades", grades);
+		modelMap.addAttribute("page", page);
+		modelMap.addAttribute("size", size);
+		return "formEmployee";
 	}
 
 	// 6. Mettre à jour (Update)

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<link rel="stylesheet" type="text/css"
+      href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+<head>
+    <meta charset="utf-8">
+    <title>Gestion des Employees</title>
+</head>
+
+<body>
+
+<div th:replace="template"></div>
+
+<div class="container mt-5">
+
+    <div class="card">
+
+        <div class="card-header" th:if="${mode=='new'}">
+            Ajout des Employees
+        </div>
+
+        <div class="card-header" th:if="${mode=='edit'}">
+            Modification des Employees
+        </div>
+
+        <div class="card-body">
+
+            <form th:action="@{saveEmployee}" method="post">
+
+                <div class="form-group">
+                    <label class="control-label" hidden>ID Employee :</label>
+
+                    <input type="hidden"
+                           name="idEmp"
+                           class="form-control"
+                           th:value="${employee.idEmp}" />
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Nom Employee :</label>
+
+                    <input type="text"
+                           name="nomEmp"
+                           class="form-control"
+                           th:value="${employee.nomEmp}" />
+
+                    <span th:errors="${employee.nomEmp}" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Salaire :</label>
+
+                    <input type="text"
+                           name="salaire"
+                           class="form-control"
+                           th:value="${employee.salaire}" />
+
+                    <span th:errors="${employee.salaire}" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Date de naissance :</label>
+
+                    <input type="date"
+                           name="dateNaiss"
+                           class="form-control"
+                           th:value="${employee.dateNaiss}" />
+
+                    <span th:errors="${employee.dateNaiss}" class="text-danger"></span>
+
+                </div>
+                <div class="form-group">
+                    <label>Grade :</label>
+                    <select name="grade" class="form-control">
+                        <option th:each="g : ${grades}"
+                                th:value="${g.idGrad}"
+                                th:text="${g.nomGrade}"
+                                th:selected="${employee.grade != null ? g.idGrad == employee.grade.idGrad : false}">
+                        </option>
+                    </select>
+                </div>
+                <input type="hidden" name="page" th:value="${page}" />
+                <input type="hidden" name="size" th:value="${size}" />
+                <div>
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
