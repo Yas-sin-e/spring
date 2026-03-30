@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8">
     <title>Liste des Employees</title>
@@ -21,7 +22,7 @@
                     <th>Salaire</th>
                     <th>Date</th>
                     <th>Grade</th>
-                    <th>Actions</th>
+                    <th sec:authorize="hasAuthority('ADMIN')">Actions</th>
                 </tr>
                 <tr th:each="e:${employees.content}">
                     <td th:text="${e.idEmp}"></td>
@@ -31,15 +32,14 @@
                     <td th:if="${!#strings.isEmpty(e.grade)}" th:text="${e.grade.nomGrade}"></td>
                     <td th:if="${#strings.isEmpty(e.grade)}" th:text="'Pas de Grade'"></td>
                     <td>
-                        <a class="btn btn-danger"
+                        <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger"
                            onclick="return confirm('Etes-vous sûr ?')"
                            th:href="@{supprimerEmployee(id=${e.idEmp}, page=${currentPage}, size=${size})}">
                             Supprimer
                         </a>
 
 
-                    </td>
-                    <td><a class="btn btn-success"
+                    <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-success"
                            th:href="@{modifierEmployee(id=${e.idEmp}, page=${currentPage}, size=${size})}">
                         Editer
                     </a></td>

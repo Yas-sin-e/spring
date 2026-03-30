@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +26,20 @@ public class EmployeeController {
 	@Autowired
 	EmployeeService emps; // Ton service d'employés
 
+	@GetMapping("/accessDenied")
+	public String error() { return "accessDenied"; }
+
 	@RequestMapping("/myView")
 	public String myView() {
 		return "myView";
 	}
+	@GetMapping(value = "/")
+	public String welcome() {
+		return "index"; // Redirige vers index.html
+	}
+
+
+
 
 	// 1. Lister les employés
 	@RequestMapping("/ListeEmployee")
@@ -55,15 +66,18 @@ public class EmployeeController {
 
 	// 3. Sauvegarder un employé
 	@RequestMapping("/saveEmployee")
-	public String saveEmployee(@Valid Employee employee, BindingResult bindingResult,
+	public String saveEmployee(ModelMap modelMap,@Valid Employee employee, BindingResult bindingResult,
 							   @RequestParam(name="page", defaultValue="0") int page,
 							   @RequestParam(name="size", defaultValue="4") int size) {
 
 		int currentPage;
 		boolean isNew = false;
 
-		if (bindingResult.hasErrors()) return "formEmployee";
-
+		if (bindingResult.hasErrors()) {
+			modelMap.addAttribute("grades", emps.getAllGrades()); // <-- AJOUTÉ
+			modelMap.addAttribute("mode", (employee.getIdEmp() == null) ? "new" : "edit"); // <-- AJOUTÉ
+			return "formEmployee";
+		}
 		if (employee.getIdEmp() == null) isNew = true; // ajout
 
 		emps.saveEmployee(employee);
